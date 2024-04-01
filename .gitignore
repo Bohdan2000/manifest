@@ -59,3 +59,8 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 .env
 .data
 .npmrc
+{
+  "message": "Not allowed by CORS",
+  "error": "Bad Request",
+  "statusCode": 400
+}

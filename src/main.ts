@@ -33,16 +33,7 @@ async function bootstrap() {
   });
   allowedOrigins.push(frontHost);
 
-  app.enableCors({
-    origin: (origin, cb) => {
-      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-        cb(null, true);
-      } else {
-        cb(new BadRequestException('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-  });
+  app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
