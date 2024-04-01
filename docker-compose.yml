@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:15.2-alpine
+    container_name: manifest-postgres
+    restart: on-failure
+    ports:
+      - ${CONFIG_DATABASE_PORT}:${CONFIG_DATABASE_PORT}
+    volumes:
+      - ./.data/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${CONFIG_DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${CONFIG_DATABASE_PASSWORD}
+      POSTGRES_DB: ${CONFIG_DATABASE_NAME}
+    networks:
+      - private_network
+      - bridge_network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: manifest-api
+    ports:
+      - ${CONFIG_APP_PORT}:${CONFIG_APP_PORT}
+    restart: on-failure
+    environment:
+      CONFIG_APP_PORT: ${CONFIG_APP_PORT}
+    volumes:
+      - ./.env:/home/manifest/.env
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    networks:
+      - private_network
+      - bridge_network
+
+networks:
+  private_network:
+    driver: bridge
+  bridge_network:
+    external: true
+      
